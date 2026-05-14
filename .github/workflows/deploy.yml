@@ -1,0 +1,56 @@
+name: Build & Deploy ExteriorWashQLD
+
+on:
+  push:
+    branches:
+      - main  # deploy on pushes to main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repo
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      # 3. Cache node_modules
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+            apps/web/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # 4. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 5. Build only the web app
+      - name: Build Web App
+        run: npm run build --prefix apps/web
+
+      # 6. Incremental FTP deploy to Hostinger
+      - name: Deploy Web App Incrementally
+        uses: SamKirkland/FTP-Deploy-Action@v4
+        with:
+          server: ${{ secrets.HOSTINGER_HOST }}
+          username: ${{ secrets.HOSTINGER_USERNAME }}
+          password: ${{ secrets.HOSTINGER_PASSWORD }}
+          local-dir: ./apps/web/dist
+          server-dir: /public_html
+          protocol: ftp
+          secure: false
+          delete: false        # Do NOT delete everything, only update changed files
+          dry-run: false
+          git-ftp-args: "--syncroot ./apps/web/dist"
