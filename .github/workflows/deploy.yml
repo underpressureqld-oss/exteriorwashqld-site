@@ -1,56 +1,39 @@
-name: Build & Deploy ExteriorWashQLD
+name: Build and Deploy to Hostinger
 
 on:
   push:
     branches:
-      - main  # deploy on pushes to main branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'npm'
 
-      # 3. Cache node_modules
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: |
-            **/node_modules
-            apps/web/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      # 4. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 5. Build only the web app
-      - name: Build Web App
-        run: npm run build --prefix apps/web
+      - name: Generate sitemap (optional)
+        run: node tools/generate-sitemap.js
 
-      # 6. Incremental FTP deploy to Hostinger
-      - name: Deploy Web App Incrementally
-        uses: SamKirkland/FTP-Deploy-Action@v4
+      - name: Build site
+        run: npm run build
+
+      - name: Upload to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.4.0
         with:
-          server: ${{ secrets.HOSTINGER_HOST }}
-          username: ${{ secrets.HOSTINGER_USERNAME }}
-          password: ${{ secrets.HOSTINGER_PASSWORD }}
-          local-dir: ./apps/web/dist
-          server-dir: /public_html
-          protocol: ftp
-          secure: false
-          delete: false        # Do NOT delete everything, only update changed files
-          dry-run: false
-          git-ftp-args: "--syncroot ./apps/web/dist"
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: dist/apps/web/
+          remote-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          git-ftp-args: --insecure
