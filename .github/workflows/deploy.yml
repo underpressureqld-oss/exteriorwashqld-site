@@ -10,30 +10,38 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
+      # Setup Node.js
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
+          cache: npm
 
+      # Install dependencies
       - name: Install dependencies
         run: npm install
 
-      - name: Generate sitemap (optional)
+      # Generate sitemap
+      - name: Generate sitemap
         run: node tools/generate-sitemap.js
 
-      - name: Build site
+      # Build website
+      - name: Build website
         run: npm run build
 
-      - name: Upload to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.4.0
+      # Deploy to Hostinger FTP
+      - name: Deploy to Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: dist/apps/web/
-          remote-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          git-ftp-args: --insecure
+          local-dir: ./dist/apps/web/
+          server-dir: /public_html/
+          protocol: ftp
+          dangerous-clean-slate: false
