@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.exteriorwashqld.com.au/sitemap.xml
