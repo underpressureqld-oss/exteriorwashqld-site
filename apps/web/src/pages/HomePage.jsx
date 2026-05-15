@@ -158,9 +158,9 @@ const HomePage = () => {
             
             <div className="relative">
               <BeforeAfterSlider 
-                beforeImage="https://images.unsplash.com/photo-1594611372993-761f31b97dae?auto=format&fit=crop&q=80" 
-                afterImage="https://images.unsplash.com/photo-1573492466940-3156e63dc25b?auto=format&fit=crop&q=80" 
-                altText="Driveway Cleaning"
+                beforeImage="/roof-after.jpg" 
+                afterImage="/roof-after.jpg" 
+                altText="Roof cleaning before and after"
               />
               <p className="text-center text-sm text-muted-foreground mt-4 font-medium">Drag slider to compare before and after</p>
             </div>
