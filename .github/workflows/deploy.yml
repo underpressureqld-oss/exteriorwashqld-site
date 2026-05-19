@@ -42,7 +42,7 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          protocol: ftp
+          protocol: ftps
           local-dir: dist/apps/web/
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
           dangerous-clean-slate: true
