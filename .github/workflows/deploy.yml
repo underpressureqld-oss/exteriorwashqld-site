@@ -3,44 +3,37 @@ name: Build and Deploy to Hostinger
 on:
   push:
     branches:
-      - main  # Trigger deploy on every push to main branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24
 
     steps:
-      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4. Regenerate sitemap
-      - name: Generate dynamic sitemap
+      - name: Generate sitemap (optional)
         run: |
           if [ -f tools/generate-sitemap.js ]; then
-            echo "Generating sitemap..."
             node tools/generate-sitemap.js
           else
             echo "No sitemap generator found, skipping..."
           fi
 
-      # 5. Build the site
       - name: Build site
         run: npm run build
 
-      # 6. Deploy to Hostinger
       - name: Upload to Hostinger via FTP
         uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
@@ -48,6 +41,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: dist/apps/web/      # Your build output folder
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }}  # Usually public_html
-          dangerous-clean-slate: true    # Removes old files first
+          local-dir: dist/apps/web/
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          dangerous-clean-slate: true
