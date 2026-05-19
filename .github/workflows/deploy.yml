@@ -8,29 +8,34 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24 for all actions
 
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24' # updated to Node 24
+          node-version: '24'
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Build site
+      - name: Generate sitemap (optional)
+        run: |
+          if [ -f tools/generate-sitemap.js ]; then
+            node tools/generate-sitemap.js
+          else
+            echo "No sitemap generator found, skipping..."
+          fi
+
       - name: Build site
         run: npm run build
 
-      # Step 5: Upload to Hostinger via FTP
       - name: Upload to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.4.0
+        uses: SamKirkland/FTP-Deploy-Action@4.5.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
