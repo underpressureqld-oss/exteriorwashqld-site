@@ -3,13 +3,13 @@ name: Build and Deploy to Hostinger
 on:
   push:
     branches:
-      - main
+      - main  # Trigger deploy on every push to main branch
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       # 1. Checkout repository
@@ -26,27 +26,28 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # 4. Optional: Generate sitemap
-      - name: Generate sitemap
+      # 4. Regenerate sitemap
+      - name: Generate dynamic sitemap
         run: |
           if [ -f tools/generate-sitemap.js ]; then
+            echo "Generating sitemap..."
             node tools/generate-sitemap.js
           else
             echo "No sitemap generator found, skipping..."
           fi
 
-      # 5. Build site
+      # 5. Build the site
       - name: Build site
         run: npm run build
 
-      # 6. Upload to Hostinger via FTP
-      - name: Deploy to Hostinger
-        uses: SamKirkland/FTP-Deploy-Action@v4
+      # 6. Deploy to Hostinger
+      - name: Upload to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
-          server: ${{ secrets.FTP_SERVER }}        # e.g., 153.92.10.159
-          username: ${{ secrets.FTP_USERNAME }}    # e.g., u796749464.exteriorwashqld.com.au
-          password: ${{ secrets.FTP_PASSWORD }}    # e.g., ^%N5c47hO44i
-          port: ${{ secrets.FTP_PORT }}            # usually 21
-          local-dir: dist/apps/web/               # build output folder
-          server-dir: ${{ secrets.FTP_REMOTE_DIR }} # usually public_html
-          dangerous-clean-slate: true             # wipes remote folder before upload
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          local-dir: dist/apps/web/      # Your build output folder
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }}  # Usually public_html
+          dangerous-clean-slate: true    # Removes old files first
