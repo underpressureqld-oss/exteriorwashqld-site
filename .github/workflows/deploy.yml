@@ -9,7 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24 for all actions
 
     steps:
       - name: Checkout repository
@@ -40,7 +40,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
+          port: ${{ secrets.FTP_PORT }}        # must be a number like 21
           local-dir: dist/apps/web/
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
           dangerous-clean-slate: true
