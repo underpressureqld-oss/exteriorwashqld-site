@@ -9,25 +9,25 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24
 
     steps:
-      # 1 — Checkout code
+      # 1. Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2 — Setup Node 24
+      # 2. Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      # 3 — Install dependencies
+      # 3. Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # 4 — Optional sitemap generation (won’t break if missing)
-      - name: Generate sitemap (optional)
+      # 4. Optional: Generate sitemap
+      - name: Generate sitemap
         run: |
           if [ -f tools/generate-sitemap.js ]; then
             node tools/generate-sitemap.js
@@ -35,18 +35,18 @@ jobs:
             echo "No sitemap generator found, skipping..."
           fi
 
-      # 5 — Build the site
+      # 5. Build site
       - name: Build site
         run: npm run build
 
-      # 6 — Upload via FTP to Hostinger
-      - name: Upload to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@4.3.0
+      # 6. Upload to Hostinger via FTP
+      - name: Deploy to Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
-          local-dir: dist/apps/web/
-          remote-dir: ${{ secrets.FTP_REMOTE_DIR }}
-          git-ftp-args: --insecure
+          server: ${{ secrets.FTP_SERVER }}        # e.g., 153.92.10.159
+          username: ${{ secrets.FTP_USERNAME }}    # e.g., u796749464.exteriorwashqld.com.au
+          password: ${{ secrets.FTP_PASSWORD }}    # e.g., ^%N5c47hO44i
+          port: ${{ secrets.FTP_PORT }}            # usually 21
+          local-dir: dist/apps/web/               # build output folder
+          server-dir: ${{ secrets.FTP_REMOTE_DIR }} # usually public_html
+          dangerous-clean-slate: true             # wipes remote folder before upload
