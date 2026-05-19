@@ -28,16 +28,18 @@ const CommercialCleaningPage = React.lazy(() => import('@/pages/CommercialCleani
 const BlogPage = React.lazy(() => import('@/pages/BlogPage.jsx'));
 const BlogPostPage = React.lazy(() => import('@/pages/BlogPostPage.jsx'));
 
-const GA4_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // To be provided
+const GA4_MEASUREMENT_ID = 'G-XXXXXXXXXX'; // To be provided - Replace with actual GA4 measurement ID
 
 // Tracking hook
 const RouteTracker = () => {
   const location = useLocation();
   
   useEffect(() => {
-    if (window.gtag) {
+    // Only track if GA4 is properly configured (not placeholder)
+    if (window.gtag && GA4_MEASUREMENT_ID !== 'G-XXXXXXXXXX') {
       window.gtag('event', 'page_view', {
-        page_path: location.pathname + location.search
+        page_path: location.pathname + location.search,
+        page_title: document.title
       });
     }
   }, [location]);

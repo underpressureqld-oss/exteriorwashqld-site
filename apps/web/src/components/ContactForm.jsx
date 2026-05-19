@@ -9,7 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { toast } from 'sonner';
-import { Loader2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,6 +22,7 @@ const formSchema = z.object({
 
 const ContactForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -40,11 +41,20 @@ const ContactForm = () => {
     try {
       await pb.collection('quote_requests').create(data, { $autoCancel: false });
       
-      toast.success('Quote request submitted! We will contact you soon.');
+      setSubmitSuccess(true);
+      toast.success('Quote request submitted! We will contact you within 24 hours.');
       form.reset();
+      
+      // Track conversion
+      if (window.gtag) {
+        window.gtag('event', 'generate_lead', {
+          event_category: 'engagement',
+          event_label: 'contact_form'
+        });
+      }
     } catch (error) {
       console.error('Error submitting quote request:', error);
-      toast.error('Failed to submit quote request. Please try again or call us directly.');
+      toast.error('Failed to submit quote request. Please try again or call us at 0468 848 342.');
     } finally {
       setIsSubmitting(false);
     }
@@ -53,139 +63,170 @@ const ContactForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="Your full name" 
-                  {...field} 
-                  className="text-gray-900 placeholder:text-gray-400"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {submitSuccess ? (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+            <CheckCircle2 className="w-12 h-12 text-green-600 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-green-900 mb-2">Quote Request Submitted!</h3>
+            <p className="text-green-700 mb-4">We'll contact you within 24 hours with your free quote.</p>
+            <Button 
+              type="button"
+              onClick={() => setSubmitSuccess(false)}
+              variant="outline"
+              className="border-green-300 text-green-700 hover:bg-green-100"
+            >
+              Submit Another Request
+            </Button>
+          </div>
+        ) : (
+          <>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="name">Name *</FormLabel>
+                  <FormControl>
+                    <Input 
+                      id="name"
+                      placeholder="Your full name" 
+                      {...field} 
+                      className="text-gray-900 placeholder:text-gray-400"
+                      aria-required="true"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input 
-                  type="email" 
-                  placeholder="your.email@example.com" 
-                  {...field} 
-                  className="text-gray-900 placeholder:text-gray-400"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="email">Email *</FormLabel>
+                  <FormControl>
+                    <Input 
+                      id="email"
+                      type="email" 
+                      placeholder="your.email@example.com" 
+                      {...field} 
+                      className="text-gray-900 placeholder:text-gray-400"
+                      aria-required="true"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Phone</FormLabel>
-              <FormControl>
-                <Input 
-                  type="tel" 
-                  placeholder="0400 000 000" 
-                  {...field} 
-                  className="text-gray-900 placeholder:text-gray-400"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="phone">Phone *</FormLabel>
+                  <FormControl>
+                    <Input 
+                      id="phone"
+                      type="tel" 
+                      placeholder="0400 000 000" 
+                      {...field} 
+                      className="text-gray-900 placeholder:text-gray-400"
+                      aria-required="true"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="service"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Service Interested In</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger className="text-gray-900">
-                    <SelectValue placeholder="Select a service" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="Residential">Residential</SelectItem>
-                  <SelectItem value="Driveway">Driveway/Concrete</SelectItem>
-                  <SelectItem value="Deck/Patio">Deck/Patio</SelectItem>
-                  <SelectItem value="Commercial">Commercial</SelectItem>
-                  <SelectItem value="Roof Cleaning">Roof Cleaning</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="service"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="service">Service Interested In *</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger id="service" className="text-gray-900" aria-required="true">
+                        <SelectValue placeholder="Select a service" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      <SelectItem value="Residential">Residential</SelectItem>
+                      <SelectItem value="Driveway">Driveway/Concrete</SelectItem>
+                      <SelectItem value="Deck/Patio">Deck/Patio</SelectItem>
+                      <SelectItem value="Commercial">Commercial</SelectItem>
+                      <SelectItem value="Roof Cleaning">Roof Cleaning</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="property_address"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Property Address</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Enter your property address" 
-                  {...field} 
-                  className="text-gray-900 placeholder:text-gray-400 resize-none"
-                  rows={3}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="property_address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="property_address">Property Address *</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      id="property_address"
+                      placeholder="Enter your property address" 
+                      {...field} 
+                      className="text-gray-900 placeholder:text-gray-400 resize-none"
+                      rows={3}
+                      aria-required="true"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="message"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Additional Message (Optional)</FormLabel>
-              <FormControl>
-                <Textarea 
-                  placeholder="Tell us more about your project..." 
-                  {...field} 
-                  className="text-gray-900 placeholder:text-gray-400 resize-none"
-                  rows={4}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel htmlFor="message">Additional Message (Optional)</FormLabel>
+                  <FormControl>
+                    <Textarea 
+                      id="message"
+                      placeholder="Tell us more about your project..." 
+                      {...field} 
+                      className="text-gray-900 placeholder:text-gray-400 resize-none"
+                      rows={4}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <Button 
-          type="submit" 
-          disabled={isSubmitting}
-          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all duration-200"
-        >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Submitting...
-            </>
-          ) : (
-            'Submit Quote Request'
-          )}
-        </Button>
+            <Button 
+              type="submit" 
+              disabled={isSubmitting}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all duration-200"
+            >
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Submit Quote Request'
+              )}
+            </Button>
+            
+            <p className="text-xs text-center text-muted-foreground">
+              By submitting this form, you agree to be contacted regarding your quote request.
+            </p>
+          </>
+        )}
       </form>
     </Form>
   );

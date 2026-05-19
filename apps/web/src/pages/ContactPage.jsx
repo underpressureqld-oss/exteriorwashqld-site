@@ -1,7 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, CheckCircle2 } from 'lucide-react';
 
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
@@ -61,8 +61,10 @@ const ContactPage = () => {
 
       <Header />
 
+      <main role="main" id="main-content">
+
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-secondary text-white py-20">
+      <section className="bg-gradient-to-br from-primary to-secondary text-white py-20" aria-labelledby="contact-hero-heading">
         <div className="section-container text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -70,20 +72,25 @@ const ContactPage = () => {
             transition={{ duration: 0.6 }}
           >
             <h1
+              id="contact-hero-heading"
               className="text-4xl md:text-5xl font-bold mb-6"
               style={{ letterSpacing: '-0.02em', textWrap: 'balance' }}
             >
-              Get a Free Quote
+              Get Your FREE Quote in 24 Hours
             </h1>
-            <p className="text-xl max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl max-w-3xl mx-auto leading-relaxed mb-4">
               Contact Exterior Wash QLD today for fast quotes and professional pressure cleaning services.
             </p>
+            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-lg px-4 py-2 mb-6">
+              <Phone className="w-5 h-5" />
+              <span className="font-semibold">Prefer to call? <a href="tel:0468848342" className="underline hover:text-primary-200">0468 848 342</a></span>
+            </div>
           </motion.div>
         </div>
       </section>
 
       {/* Contact Section */}
-      <section className="section-spacing">
+      <section className="section-spacing" aria-labelledby="contact-info-heading">
         <div className="section-container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
 
@@ -94,7 +101,7 @@ const ContactPage = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <h2 className="text-3xl font-bold mb-6 text-foreground">
+              <h2 id="contact-info-heading" className="text-3xl font-bold mb-6 text-foreground">
                 Contact Information
               </h2>
 
@@ -134,14 +141,31 @@ const ContactPage = () => {
               </div>
 
               {/* Extra Trust Section */}
-              <div className="mt-8 bg-muted rounded-2xl p-6">
-                <h3 className="font-semibold text-foreground mb-2">Why choose us?</h3>
-                <ul className="space-y-2 text-muted-foreground">
-                  <li>• Fully insured professional service</li>
-                  <li>• Residential & commercial cleaning</li>
-                  <li>• Fast quotes and reliable scheduling</li>
-                  <li>• High-quality pressure cleaning results</li>
+              <div className="mt-8 bg-muted rounded-2xl p-6 border border-border">
+                <h3 className="font-semibold text-foreground mb-4">Why choose us?</h3>
+                <ul className="space-y-3 text-muted-foreground">
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Fully insured professional service</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Residential & commercial cleaning</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>Fast quotes within 24 hours</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <CheckCircle2 className="w-5 h-5 text-primary flex-shrink-0 mt-0.5" />
+                    <span>High-quality pressure cleaning results</span>
+                  </li>
                 </ul>
+                <div className="mt-6 pt-4 border-t border-border">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="font-semibold text-foreground">Response time:</span> Most quotes sent within 24 hours
+                  </p>
+                </div>
               </div>
             </motion.div>
 
@@ -160,6 +184,8 @@ const ContactPage = () => {
           </div>
         </div>
       </section>
+
+      </main>
 
       <Footer />
     </>

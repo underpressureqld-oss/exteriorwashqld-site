@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { ChevronsLeftRight } from 'lucide-react';
 
-const BeforeAfterSlider = ({ beforeImage, afterImage, altText = "Before and after comparison" }) => {
+const BeforeAfterSlider = ({ beforeImage, afterImage, beforeSrc, afterSrc, altText = "Before and after comparison" }) => {
   const [sliderPosition, setSliderPosition] = useState(50);
 
   const handleSliderChange = (e) => {
@@ -12,12 +12,16 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, altText = "Before and afte
   return (
     <div className="relative w-full aspect-[4/3] sm:aspect-video rounded-2xl overflow-hidden select-none group touch-pan-y shadow-lg">
       {/* After Image (Background) */}
-      <img 
-        src={afterImage} 
-        alt={`After ${altText}`}
-        loading="lazy"
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none"
-      />
+      <picture className="absolute inset-0 w-full h-full pointer-events-none">
+        {afterSrc && afterSrc.webp && <source type="image/webp" srcSet={afterSrc.webp} />}
+        {afterSrc && afterSrc.jpg && <source type="image/jpeg" srcSet={afterSrc.jpg} />}
+        <img 
+          src={afterSrc && afterSrc.defaultJpg ? afterSrc.defaultJpg : afterImage} 
+          alt={`After ${altText}`}
+          loading="lazy"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        />
+      </picture>
       <div className="absolute top-4 right-4 bg-black/60 text-white px-3 py-1 text-sm font-semibold rounded-full backdrop-blur-sm pointer-events-none">
         After
       </div>
@@ -27,13 +31,17 @@ const BeforeAfterSlider = ({ beforeImage, afterImage, altText = "Before and afte
         className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none"
         style={{ width: `${sliderPosition}%` }}
       >
-        <img 
-          src={beforeImage} 
-          alt={`Before ${altText}`}
-          loading="lazy"
-          className="absolute inset-0 w-[100vw] h-full object-cover max-w-none pointer-events-none"
-          style={{ width: '100%', minWidth: '100%' }} // Ensures the image doesn't scale with the container
-        />
+        <picture>
+          {beforeSrc && beforeSrc.webp && <source type="image/webp" srcSet={beforeSrc.webp} />}
+          {beforeSrc && beforeSrc.jpg && <source type="image/jpeg" srcSet={beforeSrc.jpg} />}
+          <img 
+            src={beforeSrc && beforeSrc.defaultJpg ? beforeSrc.defaultJpg : beforeImage} 
+            alt={`Before ${altText}`}
+            loading="lazy"
+            className="absolute inset-0 w-[100vw] h-full object-cover max-w-none pointer-events-none"
+            style={{ width: '100%', minWidth: '100%' }}
+          />
+        </picture>
         <div className="absolute top-4 left-4 bg-black/60 text-white px-3 py-1 text-sm font-semibold rounded-full backdrop-blur-sm pointer-events-none">
           Before
         </div>

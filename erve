@@ -1,0 +1,31 @@
+[33mcommit 939aea2d49487a9007b80d45c119576ccfa90b46[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Author: Peter Pan <your-email@example.com>
+Date:   Fri May 15 10:04:36 2026 +1000
+
+    Save local changes
+
+[1mdiff --git a/apps/web/public/roof-after.jpg b/apps/web/public/roof-after.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..809bdb6[m
+Binary files /dev/null and b/apps/web/public/roof-after.jpg differ
+[1mdiff --git a/apps/web/src/pages/HomePage.jsx b/apps/web/src/pages/HomePage.jsx[m
+[1mindex 4a3367a..5e14e0b 100644[m
+[1m--- a/apps/web/src/pages/HomePage.jsx[m
+[1m+++ b/apps/web/src/pages/HomePage.jsx[m
+[36m@@ -158,9 +158,9 @@[m [mconst HomePage = () => {[m
+             [m
+             <div className="relative">[m
+               <BeforeAfterSlider [m
+[31m-                beforeImage="https://images.unsplash.com/photo-1594611372993-761f31b97dae?auto=format&fit=crop&q=80" [m
+[31m-                afterImage="https://images.unsplash.com/photo-1573492466940-3156e63dc25b?auto=format&fit=crop&q=80" [m
+[31m-                altText="Driveway Cleaning"[m
+[32m+[m[32m                beforeImage="/roof-after.jpg"[m[41m [m
+[32m+[m[32m                afterImage="/roof-after.jpg"[m[41m [m
+[32m+[m[32m                altText="Roof cleaning before and after"[m
+               />[m
+               <p className="text-center text-sm text-muted-foreground mt-4 font-medium">Drag slider to compare before and after</p>[m
+             </div>[m
+[1mdiff --git a/dist/apps/web/roof-after.jpg b/dist/apps/web/roof-after.jpg[m
+[1mnew file mode 100644[m
+[1mindex 0000000..809bdb6[m
+Binary files /dev/null and b/dist/apps/web/roof-after.jpg differ

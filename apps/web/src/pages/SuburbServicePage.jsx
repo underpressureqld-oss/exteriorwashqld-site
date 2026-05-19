@@ -9,6 +9,7 @@ import QuoteButton from '@/components/QuoteButton.jsx';
 import BreadcrumbNav from '@/components/BreadcrumbNav.jsx';
 import MapEmbed from '@/components/MapEmbed.jsx';
 import { getPageData, parseSlug, getNearbySuburbs } from '@/data/suburbServiceData.js';
+import BeforeAfterSlider from '@/components/BeforeAfterSlider.jsx';
 import { blogPosts } from '@/data/BlogData.js';
 
 const SuburbServicePage = () => {
@@ -92,6 +93,10 @@ const SuburbServicePage = () => {
         <meta name="description" content={pageData.metaDescription} />
         <meta name="keywords" content={pageData.localKeywords.join(', ')} />
         <link rel="canonical" href={currentUrl} />
+        {/* Preload hero WebP when available for improved LCP */}
+        {pageData.heroSrc && pageData.heroSrc.defaultWebp && (
+          <link rel="preload" as="image" href={pageData.heroSrc.defaultWebp} />
+        )}
         
         {/* Open Graph */}
         <meta property="og:title" content={pageData.title} />
@@ -133,7 +138,26 @@ const SuburbServicePage = () => {
         {/* Hero Section */}
         <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-28 overflow-hidden bg-slate-950">
           <div className="absolute inset-0 z-0">
-            <img src={pageData.heroImage} alt={`${service.name} in ${suburb.name}`} loading="lazy" className="w-full h-full object-cover opacity-40" />
+            {(() => {
+              const heroSrc = pageData.heroSrc;
+              if (heroSrc && (heroSrc.webp || heroSrc.jpg)) {
+                return (
+                  <picture>
+                    {heroSrc.webp && <source type="image/webp" srcSet={heroSrc.webp} sizes="(max-width: 768px) 100vw, 1200px" />}
+                    {heroSrc.jpg && <source type="image/jpeg" srcSet={heroSrc.jpg} sizes="(max-width: 768px) 100vw, 1200px" />}
+                    <img src={heroSrc.defaultJpg || pageData.heroImage} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover opacity-40" />
+                  </picture>
+                );
+              }
+              // fallback to external hero if no local assets
+              const fallback = pageData.heroImage;
+              return (
+                <picture>
+                  <source type="image/webp" srcSet={fallback.includes('?') ? `${fallback}&fm=webp&q=80` : `${fallback}?fm=webp&q=80`} />
+                  <img src={fallback} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover opacity-40" />
+                </picture>
+              );
+            })()}
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
           </div>
 
@@ -176,13 +200,27 @@ const SuburbServicePage = () => {
                     </li>
                   ))}
                 </ul>
+                {/* Render long-form localized content (SEO) */}
+                {pageData.longContent && (
+                  <div className="prose max-w-none mt-6 text-muted-foreground" dangerouslySetInnerHTML={{ __html: pageData.longContent }} />
+                )}
               </motion.div>
 
               <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-                <MapEmbed 
-                  embedUrl={`https://maps.google.com/maps?q=${encodeURIComponent(suburb.name + ' QLD')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
-                  title={`Service Area: ${suburb.name}`}
-                />
+                {pageData.beforeImage && pageData.afterImage ? (
+                  <BeforeAfterSlider
+                    beforeImage={pageData.beforeImage}
+                    afterImage={pageData.afterImage}
+                    beforeSrc={pageData.beforeSrc}
+                    afterSrc={pageData.afterSrc}
+                    altText={`${service.name} before and after in ${suburb.name}`}
+                  />
+                ) : (
+                  <MapEmbed 
+                    embedUrl={`https://maps.google.com/maps?q=${encodeURIComponent(suburb.name + ' QLD')}&t=&z=13&ie=UTF8&iwloc=&output=embed`}
+                    title={`Service Area: ${suburb.name}`}
+                  />
+                )}
               </motion.div>
             </div>
           </div>

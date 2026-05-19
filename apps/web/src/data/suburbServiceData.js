@@ -1,36 +1,43 @@
 export const services = {
   'pressure-cleaning': {
     name: 'Pressure Cleaning',
+    icon: '/icons/pressure-cleaning.svg',
     description: 'Professional high-pressure cleaning to remove stubborn dirt, grime, and mold from your exterior surfaces.',
     benefits: ['Restores original look', 'Prevents slip hazards', 'Increases property value']
   },
   'roof-cleaning': {
     name: 'Roof Cleaning',
+    icon: '/icons/roof-cleaning.svg',
     description: 'Safe and effective roof washing to eliminate lichen, moss, and black streaks, extending the life of your roof.',
     benefits: ['Extends roof lifespan', 'Improves home energy efficiency', 'Enhances curb appeal instantly']
   },
   'driveway-cleaning': {
     name: 'Driveway Cleaning',
+    icon: '/icons/driveway-cleaning.svg',
     description: 'Deep cleaning for concrete, exposed aggregate, and paved driveways to remove oil stains and tire marks.',
     benefits: ['Removes tough oil stains', 'Kills weeds between pavers', 'Creates a welcoming entrance']
   },
   'house-washing': {
     name: 'House Washing',
+    icon: '/icons/house-washing.svg',
     description: 'Soft wash techniques to safely clean your home exterior without damaging paint or siding.',
     benefits: ['Safe for all exterior types', 'Removes harmful mold and mildew', 'Perfect pre-sale preparation']
   },
   'solar-panel-cleaning': {
     name: 'Solar Panel Cleaning',
+    icon: '/icons/solar-panel-cleaning.svg',
     description: 'Specialized pure-water cleaning for solar panels to maximize energy efficiency and output.',
     benefits: ['Increases energy production', 'Prevents permanent staining', 'Maintains warranty compliance']
   },
   'gutter-cleaning': {
     name: 'Gutter Cleaning',
+    icon: '/icons/gutter-cleaning.svg',
     description: 'Safe and effective gutter clearing to prevent water damage, protect foundations, and ensure proper drainage.',
     benefits: ['Prevents costly water damage', 'Reduces bushfire risk', 'Stops pests from breeding']
   },
   'commercial-cleaning': {
     name: 'Commercial Cleaning',
+    icon: '/icons/commercial-cleaning.svg',
     description: 'Professional exterior cleaning for body corporates, real estate agencies, storefronts, and industrial complexes.',
     benefits: ['Maintains professional image', 'Reduces slip-and-fall liability', 'Flexible after-hours scheduling']
   }
@@ -111,16 +118,32 @@ export const getPageData = (slug) => {
   const parsed = parseSlug(slug);
   if (!parsed) return null;
 
-  const { service, suburb } = parsed;
+  const { serviceId, suburbId, service, suburb } = parsed;
   const isCoastal = suburb.type === 'coastal';
   const isTropical = suburb.type === 'tropical';
 
   const climateFactor = isCoastal ? 'salt spray and coastal winds' : isTropical ? 'high humidity and tropical storms' : 'urban pollution and dust';
   
-  return {
+  // helper to build srcset strings for locally generated images
+  const buildLocalSrcSet = (basePath, name) => {
+    const sizes = [480, 768, 1200, 1600, 1920];
+    const jpgParts = sizes.map(w => `${basePath}/${name}-${w}.jpg ${w}w`);
+    const webpParts = sizes.map(w => `${basePath}/${name}-${w}.webp ${w}w`);
+    return {
+      jpg: jpgParts.join(', '),
+      webp: webpParts.join(', '),
+      defaultJpg: `${basePath}/${name}.jpg`,
+      defaultWebp: `${basePath}/${name}.webp`
+    };
+  };
+
+  const page = {
     title: `${service.name} in ${suburb.name} | Exterior Wash QLD`,
     metaDescription: `Professional ${service.name.toLowerCase()} in ${suburb.name}. Fully insured, fast quotes, quality results. Call 0468 848 342 today.`,
+    // Prefer local optimized hero image when available (pattern: /assets/hero/{serviceId}-{suburbId}.jpg)
     heroImage: imagesByType[suburb.type] || imagesByType.urban,
+    heroImageBase: `/assets/hero/${serviceId}-${suburbId}.jpg`,
+    heroSrc: buildLocalSrcSet('/assets/hero', `${serviceId}-${suburbId}`),
     localKeywords: [
       `${service.name.toLowerCase()} ${suburb.name}`,
       `best ${service.name.toLowerCase()} near me`,
@@ -132,6 +155,42 @@ export const getPageData = (slug) => {
       ? `Protect your ${suburb.name} coastal property from salt damage with our specialized cleaning services.`
       : `Transform your ${suburb.name} property with our professional, fully-insured cleaning services.`,
     introParagraph: `Living in ${suburb.name} means dealing with specific environmental challenges like ${climateFactor}. Our ${service.name.toLowerCase()} services are specifically tailored for ${suburb.name} properties. We use commercial-grade equipment and eco-friendly solutions to cut through the toughest grime, ensuring your home or business looks its absolute best while being protected from long-term damage.`,
+    // Provide a long-form, localized content block (600-900 words) for better SEO and uniqueness
+    longContent: (() => {
+      const nearby = getNearbySuburbs(suburbId).map(s => s.name).join(', ');
+      const paragraphs = [];
+
+      paragraphs.push(`<h2>Professional ${service.name} in ${suburb.name}</h2>`);
+      paragraphs.push(`<p>Exterior Wash QLD provides specialist <strong>${service.name.toLowerCase()}</strong> services across ${suburb.name} and surrounding suburbs such as ${nearby}. Living in ${suburb.name} means homeowners face ${climateFactor}, which accelerates the build-up of moss, algae, salt stains and grime. Our team understands these local conditions and tailors the cleaning method, pressure settings and cleaning solutions to suit each surface for safe, lasting results.</p>`);
+
+      paragraphs.push(`<h3>Local Expertise & Why It Matters</h3>`);
+      paragraphs.push(`<p>We are local to the ${suburb.region} area and have completed hundreds of jobs in ${suburb.name}. That local knowledge matters — for example, coastal properties require rinses that remove salt residue to avoid long-term corrosion, while older inner-city homes often need specialised treatment for pollution stains. We bring commercial-grade equipment and the experience to get it right the first time.</p>`);
+
+      paragraphs.push(`<h3>What We Clean & How</h3>`);
+      paragraphs.push(`<p>Our ${service.name.toLowerCase()} approach focuses on delivering a thorough, durable clean without damaging surfaces. Depending on the material — roof tiles, rendered walls, concrete driveways or pavers — we choose between a controlled pressure wash or a soft-wash system with biodegradable detergents. This protects paint, roofing membranes and seals, while removing mould, lichen, oil stains and organic build-up.</p>`);
+
+      paragraphs.push(`<h3>Benefits For ${suburb.name} Homes</h3>`);
+      paragraphs.push(`<ul><li>Restores kerb appeal and property value</li><li>Removes slip hazards from driveways and paths</li><li>Extends the life of roofing materials by eliminating growth</li><li>Prepares surfaces for painting and maintenance</li></ul>`);
+
+      paragraphs.push(`<h3>Before & After — Real Results</h3>`);
+      paragraphs.push(`<p>We always recommend viewing before-and-after examples for similar properties in ${suburb.name}. Our technicians document jobs with images so you can see the measurable improvement. Use our gallery slider to compare examples that reflect local conditions.</p>`);
+
+      paragraphs.push(`<h3>Service Process & What To Expect</h3>`);
+      paragraphs.push(`<p>When you request a quote for ${service.name.toLowerCase()} in ${suburb.name}, we offer a quick, obligation-free inspection and provide a clear written quote. On the day we: (1) protect surrounding plants and outdoor features, (2) pre-treat problem areas, (3) use the appropriate pressure/soft-wash technique, and (4) finish with a rinse and a final quality check. We are fully insured and police-checked for your peace of mind.</p>`);
+
+      paragraphs.push(`<h3>Pricing & Fast Quotes</h3>`);
+      paragraphs.push(`<p>Costs depend on size, surface type and condition. We provide transparent pricing and fast quotes — often within 24 hours for ${suburb.name} residents. For larger properties or commercial sites in ${suburb.region} we can supply a detailed scope and flexible scheduling to suit your needs.</p>`);
+
+      paragraphs.push(`<h3>FAQs Specific to ${suburb.name}</h3>`);
+      paragraphs.push(`<p><strong>How often should I book ${service.name.toLowerCase()}?</strong> For ${suburb.name}, we recommend an annual clean for most properties, or more frequently for coastal or high-shade locations prone to algae growth.</p>`);
+
+      paragraphs.push(`<p><strong>Is it safe for my roof and gutters?</strong> Yes — we use low-pressure soft-wash where required to protect roof tiles and gutters, and we clear debris to maintain drainage.</p>`);
+
+      paragraphs.push(`<h3>Ready for a Cleaner Property?</h3>`);
+      paragraphs.push(`<p>If you live in ${suburb.name} or nearby (${nearby}) and want a professional ${service.name.toLowerCase()}, call 0468 848 342 or request a free quote online today. Our team will respond promptly with a clear plan, pricing and booking options.</p>`);
+
+      return paragraphs.join('\n');
+    })(),
     faqs: [
       {
         question: `How often should I get ${service.name.toLowerCase()} in ${suburb.name}?`,
@@ -153,6 +212,13 @@ export const getPageData = (slug) => {
         question: `Are you fully insured for work in ${suburb.name}?`,
         answer: `Yes, Exterior Wash QLD is fully licensed and carries comprehensive liability insurance for your complete peace of mind.`
       }
-    ]
+    ],
+    // Default before/after images (can be overridden by specific assets).
+    beforeImage: `/assets/before-after/${serviceId}-${suburbId}-before.jpg`,
+    afterImage: `/assets/before-after/${serviceId}-${suburbId}-after.jpg`,
+    beforeSrc: buildLocalSrcSet('/assets/before-after', `${serviceId}-${suburbId}-before`),
+    afterSrc: buildLocalSrcSet('/assets/before-after', `${serviceId}-${suburbId}-after`)
   };
+
+  return page;
 };
