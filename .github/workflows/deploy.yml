@@ -1,4 +1,4 @@
-name: Build and Deploy to Hostinger via SFTP
+name: Build and Deploy to Hostinger
 
 on:
   push:
@@ -8,8 +8,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24 for all actions
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
       - name: Checkout repository
@@ -18,12 +19,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: 24
 
       - name: Install dependencies
         run: npm install
 
-      - name: Generate sitemap (optional)
+      - name: Generate sitemap
         run: |
           if [ -f tools/generate-sitemap.js ]; then
             node tools/generate-sitemap.js
@@ -31,16 +32,15 @@ jobs:
             echo "No sitemap generator found, skipping..."
           fi
 
-      - name: Build site
+      - name: Build website
         run: npm run build
 
-      - name: Upload to Hostinger via SFTP
-        uses: appleboy/scp-action@v0.1.5
+      - name: Deploy via SFTP
+        uses: Dylan700/sftp-upload-action@latest
         with:
-          host: ${{ secrets.FTP_SERVER }}          # e.g., 153.92.10.159
-          username: ${{ secrets.FTP_USERNAME }}    # e.g., u796749464.exteriorwashqld.com.au
-          password: ${{ secrets.FTP_PASSWORD }}    # your FTP/SFTP password
-          port: ${{ secrets.FTP_PORT }}            # usually 22 for SFTP
-          source: "dist/apps/web/*"
-          target: "/public_html/"                   # make sure it ends with /
-          strip_components: 1                        # removes leading folder path
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: ${{ secrets.FTP_PORT }}
+          uploads: |
+            dist/apps/web/ => /public_html/
