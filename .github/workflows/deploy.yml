@@ -5,46 +5,37 @@ on:
     branches:
       - main
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout repository
+      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node.js
+      # Step 2: Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
-          cache: npm
+          node-version: '24' # updated to Node 24
 
-      # Install dependencies
+      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Generate sitemap
-      - name: Generate sitemap
-        run: node tools/generate-sitemap.js
-
-      # Build website
-      - name: Build website
+      # Step 4: Build site
+      - name: Build site
         run: npm run build
 
-      # Deploy to Hostinger FTP
-      - name: Deploy to Hostinger
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      # Step 5: Upload to Hostinger via FTP
+      - name: Upload to Hostinger via FTP
+        uses: SamKirkland/FTP-Deploy-Action@4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          local-dir: ./dist/apps/web/
-          server-dir: /public_html/
-          protocol: ftp
-          dangerous-clean-slate: false
+          local-dir: dist/apps/web/
+          remote-dir: ${{ secrets.FTP_REMOTE_DIR }}
+          git-ftp-args: --insecure
