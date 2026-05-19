@@ -1,6 +1,5 @@
 name: Build and Deploy to Hostinger
 
-# Trigger on push to main branch
 on:
   push:
     branches:
@@ -10,24 +9,24 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true  # ensures Node.js 24 for all actions
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      # Step 1: Checkout your repository
+      # 1 — Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js 24
+      # 2 — Setup Node 24
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '24'
 
-      # Step 3: Install dependencies
+      # 3 — Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Optional - Generate sitemap if present
+      # 4 — Optional sitemap generation (won’t break if missing)
       - name: Generate sitemap (optional)
         run: |
           if [ -f tools/generate-sitemap.js ]; then
@@ -36,13 +35,13 @@ jobs:
             echo "No sitemap generator found, skipping..."
           fi
 
-      # Step 5: Build the site
+      # 5 — Build the site
       - name: Build site
         run: npm run build
 
-      # Step 6: Deploy to Hostinger via FTP
+      # 6 — Upload via FTP to Hostinger
       - name: Upload to Hostinger via FTP
-        uses: SamKirkland/FTP-Deploy-Action@v4
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
