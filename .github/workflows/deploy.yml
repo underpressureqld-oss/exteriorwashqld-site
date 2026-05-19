@@ -40,7 +40,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}        # must be a number like 21
+          port: ${{ secrets.FTP_PORT }}           # numeric only, e.g., 21
           local-dir: dist/apps/web/
           server-dir: ${{ secrets.FTP_REMOTE_DIR }}
           dangerous-clean-slate: true
