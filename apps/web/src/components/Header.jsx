@@ -61,6 +61,10 @@ const Header = () => {
                   src="/logo.png"
                   alt="Exterior Wash QLD Logo"
                   className="h-24 w-auto object-contain"
+                  loading="eager"
+                  fetchpriority="high"
+                  width="200"
+                  height="96"
                 />
 
               </Link>

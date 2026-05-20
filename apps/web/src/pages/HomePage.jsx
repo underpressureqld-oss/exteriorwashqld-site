@@ -141,15 +141,16 @@ const HomePage = () => {
       <section className="hero-critical" aria-labelledby="hero-heading">
         {(() => {
           const hero = 'https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80';
-          const sizes = [480, 768, 1200, 1600, 1920];
-          const buildSrcSet = (url, fmt) => sizes.map(w => `${url}${url.includes('?') ? '&' : '?'}w=${w}${fmt ? '&fm=' + fmt + '&q=80' : ''} ${w}w`).join(', ');
-          const webpSrcSet = buildSrcSet(hero, 'webp');
-          const fallbackSrcSet = buildSrcSet(hero, '');
           return (
-            <picture>
-              <source type="image/webp" srcSet={webpSrcSet} />
-              <img src={hero} srcSet={fallbackSrcSet} sizes="(max-width: 768px) 100vw, 1200px" alt="Professional pressure cleaning service" fetchpriority="high" decoding="async" width="1920" height="1080" className="hero-critical-img" />
-            </picture>
+            <img 
+              src={hero} 
+              alt="Professional pressure cleaning service" 
+              fetchpriority="high" 
+              decoding="async" 
+              width="1920" 
+              height="1080" 
+              className="hero-critical-img" 
+            />
           );
         })()}
 
@@ -204,6 +205,9 @@ const HomePage = () => {
 
       <Suspense fallback={<div className="section-container">Loading...</div>}>
         <SocialProof />
+      </Suspense>
+
+      <Suspense fallback={<div className="section-container">Loading...</div>}>
         <ComparisonSection />
       </Suspense>
 
@@ -313,11 +317,13 @@ const HomePage = () => {
             </div>
             
             <div className="relative">
-              <BeforeAfterSlider 
-                beforeImage="/roof-before.jpg" 
-                afterImage="/roof-after.jpg" 
-                altText="Roof cleaning before and after"
-              />
+              <Suspense fallback={<div className="aspect-video bg-muted rounded-2xl flex items-center justify-center">Loading...</div>}>
+                <BeforeAfterSlider 
+                  beforeImage="/roof-before.svg" 
+                  afterImage="/roof-after.jpg" 
+                  altText="Roof cleaning before and after"
+                />
+              </Suspense>
               <p className="text-center text-sm text-muted-foreground mt-4 font-medium">Drag slider to compare before and after</p>
             </div>
           </div>
