@@ -186,6 +186,8 @@ const AboutPage = () => {
               <img
                 src="https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/1000068508-RnqRo.jpg"
                 alt="Pressure cleaning service"
+                loading="lazy"
+                decoding="async"
                 className="rounded-2xl shadow-2xl w-full"
               />
             </motion.div>

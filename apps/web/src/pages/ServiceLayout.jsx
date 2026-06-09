@@ -103,7 +103,7 @@ const ServiceLayout = ({
         {/* Hero */}
         <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden bg-slate-950">
           <div className="absolute inset-0 z-0">
-            <img src={heroImage} alt={serviceName} loading="lazy" className="w-full h-full object-cover opacity-40" />
+            <img src={heroImage} alt={serviceName} fetchpriority="high" decoding="async" className="w-full h-full object-cover opacity-40" />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
           </div>
           <div className="section-container relative z-10 text-center max-w-4xl mx-auto">

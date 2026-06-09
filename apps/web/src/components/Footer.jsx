@@ -58,7 +58,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-primary shrink-0" />
-                <a href="mailto:quotes@www.exteriorwashqld.com.au.au" className="hover:text-primary transition-colors">underpressureqld@gmail.com</a>
+                <a href="mailto:underpressureqld@gmail.com" className="hover:text-primary transition-colors">underpressureqld@gmail.com</a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary shrink-0" />

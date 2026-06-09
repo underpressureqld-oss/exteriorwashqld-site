@@ -1,4 +1,4 @@
-name: Build and Deploy to Hostinger
+name: Build and Deploy
 
 on:
   push:
@@ -9,9 +9,6 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -19,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 24
+          node-version: 20
 
       - name: Install dependencies
         run: npm install
@@ -35,12 +32,14 @@ jobs:
       - name: Build website
         run: npm run build
 
-      - name: Deploy via SFTP
-        uses: Dylan700/sftp-upload-action@latest
+      - name: Deploy to Hostinger
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: ${{ secrets.FTP_PORT }}
-          uploads: |
-            dist/apps/web/ => /public_html/
+          server-dir: /public_html/
+          local-dir: ./dist/apps/web/
+          # If your FTP connection requires SSL, uncomment the line below:
+          # secure: true

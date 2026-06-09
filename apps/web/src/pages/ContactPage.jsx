@@ -21,7 +21,7 @@ const ContactPage = () => {
       icon: Mail,
       title: 'Email',
       details: 'underpressureqld@gmail.com',
-      link: 'mailto:info@www.exteriorwashqld.com.au'
+      link: 'mailto:underpressureqld@gmail.com'
     },
     {
       icon: MapPin,

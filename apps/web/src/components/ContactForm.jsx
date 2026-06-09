@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useForm as useFormspree } from '@formspree/react';
 import pb from '@/lib/pocketbaseClient';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,8 +22,8 @@ const formSchema = z.object({
 });
 
 const ContactForm = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [state, handleSubmitFormspree] = useFormspree('xlgkjgvj');
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -37,9 +38,16 @@ const ContactForm = () => {
   });
 
   const onSubmit = async (data) => {
-    setIsSubmitting(true);
     try {
-      await pb.collection('quote_requests').create(data, { $autoCancel: false });
+      // Submit to Formspree
+      await handleSubmitFormspree(data);
+      
+      // Also save to PocketBase for record keeping
+      try {
+        await pb.collection('quote_requests').create(data, { $autoCancel: false });
+      } catch (pbError) {
+        console.warn('PocketBase save failed, but email was sent:', pbError);
+      }
       
       setSubmitSuccess(true);
       toast.success('Quote request submitted! We will contact you within 24 hours.');
@@ -55,8 +63,6 @@ const ContactForm = () => {
     } catch (error) {
       console.error('Error submitting quote request:', error);
       toast.error('Failed to submit quote request. Please try again or call us at 0468 848 342.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -209,10 +215,10 @@ const ContactForm = () => {
 
             <Button 
               type="submit" 
-              disabled={isSubmitting}
+              disabled={state.submitting}
               className="w-full bg-primary text-primary-foreground hover:bg-primary/90 active:scale-[0.98] transition-all duration-200"
             >
-              {isSubmitting ? (
+              {state.submitting ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                   Submitting...

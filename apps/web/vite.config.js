@@ -221,31 +221,31 @@ const addTransformIndexHtml = {
 		const tags = [
 			{
 				tag: 'script',
-				attrs: { type: 'module' },
+				attrs: { type: 'module', defer: true },
 				children: configHorizonsRuntimeErrorHandler,
 				injectTo: 'head',
 			},
 			{
 				tag: 'script',
-				attrs: { type: 'module' },
+				attrs: { type: 'module', defer: true },
 				children: configHorizonsViteErrorHandler,
 				injectTo: 'head',
 			},
 			{
 				tag: 'script',
-				attrs: { type: 'module' },
+				attrs: { type: 'module', defer: true },
 				children: configHorizonsConsoleErrorHandler,
 				injectTo: 'head',
 			},
 			{
 				tag: 'script',
-				attrs: { type: 'module' },
+				attrs: { type: 'module', defer: true },
 				children: configWindowFetchMonkeyPatch,
 				injectTo: 'head',
 			},
 			{
 				tag: 'script',
-				attrs: { type: 'module' },
+				attrs: { type: 'module', defer: true },
 				children: configNavigationHandler,
 				injectTo: 'head',
 			},
@@ -258,6 +258,7 @@ const addTransformIndexHtml = {
 					attrs: {
 						src: process.env.TEMPLATE_BANNER_SCRIPT_URL,
 						'template-redirect-url': process.env.TEMPLATE_REDIRECT_URL,
+						defer: true
 					},
 					injectTo: 'head',
 				}
