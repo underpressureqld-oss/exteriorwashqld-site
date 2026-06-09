@@ -1,46 +1,68 @@
 import { Helmet } from 'react-helmet';
-import {
-  CheckCircle2,
-  ShieldCheck,
-  Star,
-  Clock,
-  Home as HomeIcon,
-  Hammer,
-  Building2,
-  Droplets,
-  Frame as RoofIcon,
-  Sun,
-  Phone
-} from 'lucide-react';
+import { Phone, CheckCircle2, ShieldCheck, Star, Clock } from 'lucide-react';
 
-import ServiceCard from '@/components/ServiceCard.jsx';
 import Header from '@/components/Header.jsx';
 import Footer from '@/components/Footer.jsx';
 import QuoteButton from '@/components/QuoteButton.jsx';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useMemo, lazy, useState, useEffect } from 'react';
 
-const SocialProof = React.lazy(() => import('@/components/SocialProof.jsx'));
-const ComparisonSection = React.lazy(() => import('@/components/ComparisonSection.jsx'));
-const BeforeAfterSlider = React.lazy(() => import('@/components/BeforeAfterSlider.jsx'));
-const ReviewWidget = React.lazy(() => import('@/components/ReviewWidget.jsx'));
-
-import { suburbs, services } from '../data/suburbServiceData.js';
+const SocialProof = lazy(() => import('@/components/SocialProof.jsx'));
+const ComparisonSection = lazy(() => import('@/components/ComparisonSection.jsx'));
+const BeforeAfterSlider = lazy(() => import('@/components/BeforeAfterSlider.jsx'));
+const ReviewWidget = lazy(() => import('@/components/ReviewWidget.jsx'));
 
 const HomePage = () => {
   const baseUrl = 'https://www.exteriorwashqld.com.au';
+  const [belowFoldData, setBelowFoldData] = useState(null);
 
-  const flattenedLinks = Object.keys(services)
-    .flatMap(serviceId =>
-      Object.keys(suburbs).map(suburbId => ({
-        serviceId,
-        suburbId,
-        serviceName: services[serviceId].name,
-        suburbName: suburbs[suburbId].name,
-        slug: `${serviceId}-${suburbId}`
-      }))
-    )
-    .slice(0, 12);
+  // Load below-fold data after hero renders
+  useEffect(() => {
+    import('../data/suburbServiceData.js').then(data => {
+      import('lucide-react').then(lucide => {
+        setBelowFoldData({
+          suburbs: data.suburbs,
+          services: data.services,
+          Home: lucide.Home,
+          Hammer: lucide.Hammer,
+          Building2: lucide.Building2,
+          Droplets: lucide.Droplets,
+          Frame: lucide.Frame,
+          Sun: lucide.Sun
+        });
+      });
+    });
+  }, []);
+
+  const flattenedLinks = useMemo(() => {
+    if (!belowFoldData) return [];
+    const { suburbs, services } = belowFoldData;
+    return Object.keys(services)
+      .flatMap(serviceId =>
+        Object.keys(suburbs).map(suburbId => ({
+          serviceId,
+          suburbId,
+          serviceName: services[serviceId].name,
+          suburbName: suburbs[suburbId].name,
+          slug: `${serviceId}-${suburbId}`
+        }))
+      )
+      .slice(0, 12);
+  }, [belowFoldData]);
+
+  const IconMap = useMemo(() => {
+    if (!belowFoldData) return {};
+    const { Droplets, Frame: RoofIcon, Home: HomeIcon, Sun, Hammer, Building2 } = belowFoldData;
+    return {
+      'pressure-cleaning': Droplets,
+      'roof-cleaning': RoofIcon,
+      'driveway-cleaning': Droplets,
+      'house-washing': HomeIcon,
+      'solar-panel-cleaning': Sun,
+      'gutter-cleaning': Hammer,
+      'commercial-cleaning': Building2
+    };
+  }, [belowFoldData]);
 
   return (
     <>
@@ -204,19 +226,8 @@ const HomePage = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
 
-              {Object.keys(services).map(key => {
-
-                const IconMap = {
-                  'pressure-cleaning': Droplets,
-                  'roof-cleaning': RoofIcon,
-                  'driveway-cleaning': Droplets,
-                  'house-washing': HomeIcon,
-                  'solar-panel-cleaning': Sun,
-                  'gutter-cleaning': Hammer,
-                  'commercial-cleaning': Building2
-                };
-
-                const Icon = IconMap[key] || Droplets;
+              {belowFoldData && Object.keys(belowFoldData.services).map(key => {
+                const Icon = IconMap[key] || belowFoldData.Droplets;
 
                 return (
                   <a
@@ -229,7 +240,7 @@ const HomePage = () => {
                     </div>
 
                     <div className="font-semibold text-foreground">
-                      {services[key].name}
+                      {belowFoldData.services[key].name}
                     </div>
                   </a>
                 );
