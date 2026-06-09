@@ -41,5 +41,4 @@ jobs:
           port: ${{ secrets.FTP_PORT }}
           server-dir: /public_html/
           local-dir: ./dist/apps/web/
-          # If your FTP connection requires SSL, uncomment the line below:
-          # secure: true
+          secure: true
