@@ -34,9 +34,18 @@ const HomePage = () => {
     });
   }, []);
 
+  // Render placeholder to prevent layout shift
+  const services = belowFoldData?.services || {};
+  const suburbs = belowFoldData?.suburbs || {};
+  const Droplets = belowFoldData?.Droplets;
+  const RoofIcon = belowFoldData?.Frame;
+  const HomeIcon = belowFoldData?.Home;
+  const Sun = belowFoldData?.Sun;
+  const Hammer = belowFoldData?.Hammer;
+  const Building2 = belowFoldData?.Building2;
+
   const flattenedLinks = useMemo(() => {
     if (!belowFoldData) return [];
-    const { suburbs, services } = belowFoldData;
     return Object.keys(services)
       .flatMap(serviceId =>
         Object.keys(suburbs).map(suburbId => ({
@@ -48,21 +57,17 @@ const HomePage = () => {
         }))
       )
       .slice(0, 12);
-  }, [belowFoldData]);
+  }, [belowFoldData, services, suburbs]);
 
-  const IconMap = useMemo(() => {
-    if (!belowFoldData) return {};
-    const { Droplets, Frame: RoofIcon, Home: HomeIcon, Sun, Hammer, Building2 } = belowFoldData;
-    return {
-      'pressure-cleaning': Droplets,
-      'roof-cleaning': RoofIcon,
-      'driveway-cleaning': Droplets,
-      'house-washing': HomeIcon,
-      'solar-panel-cleaning': Sun,
-      'gutter-cleaning': Hammer,
-      'commercial-cleaning': Building2
-    };
-  }, [belowFoldData]);
+  const IconMap = useMemo(() => ({
+    'pressure-cleaning': Droplets,
+    'roof-cleaning': RoofIcon,
+    'driveway-cleaning': Droplets,
+    'house-washing': HomeIcon,
+    'solar-panel-cleaning': Sun,
+    'gutter-cleaning': Hammer,
+    'commercial-cleaning': Building2
+  }), [Droplets, RoofIcon, HomeIcon, Sun, Hammer, Building2]);
 
   return (
     <>
@@ -226,8 +231,8 @@ const HomePage = () => {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
 
-              {belowFoldData && Object.keys(belowFoldData.services).map(key => {
-                const Icon = IconMap[key] || belowFoldData.Droplets;
+              {Object.keys(services).map(key => {
+                const Icon = IconMap[key] || Droplets;
 
                 return (
                   <a
@@ -240,7 +245,7 @@ const HomePage = () => {
                     </div>
 
                     <div className="font-semibold text-foreground">
-                      {belowFoldData.services[key].name}
+                      {services[key].name}
                     </div>
                   </a>
                 );

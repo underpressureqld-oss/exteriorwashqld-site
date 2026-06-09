@@ -329,14 +329,23 @@ export default defineConfig({
 			],
 			output: {
 				manualChunks: {
-					'vendor': ['react', 'react-dom', 'react-router-dom'],
-					'ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-label', '@radix-ui/react-select', '@radix-ui/react-slot', '@radix-ui/react-toast'],
+					'react-core': ['react', 'react-dom'],
+					'react-router': ['react-router-dom'],
+					'ui-dialog': ['@radix-ui/react-dialog'],
+					'ui-dropdown': ['@radix-ui/react-dropdown-menu'],
+					'ui-label': ['@radix-ui/react-label'],
+					'ui-select': ['@radix-ui/react-select'],
+					'ui-slot': ['@radix-ui/react-slot'],
+					'ui-toast': ['@radix-ui/react-toast'],
 					'framer': ['framer-motion'],
-					'lucide': ['lucide-react']
+					'lucide': ['lucide-react'],
+					'react-helmet': ['react-helmet'],
+					'forms': ['react-hook-form', 'zod', '@hookform/resolvers'],
+					'formspree': ['@formspree/react']
 				}
 			}
 		},
-		chunkSizeWarningLimit: 600,
+		chunkSizeWarningLimit: 500,
 		cssCodeSplit: true,
 		minify: 'terser',
 		terserOptions: {
