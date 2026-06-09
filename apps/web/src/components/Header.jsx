@@ -58,7 +58,7 @@ const Header = () => {
               >
 
                 <img
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="Exterior Wash QLD Logo"
                   loading="eager"
                   fetchpriority="high"
