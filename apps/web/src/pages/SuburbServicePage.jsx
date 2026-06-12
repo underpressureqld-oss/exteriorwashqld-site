@@ -136,7 +136,7 @@ const SuburbServicePage = () => {
 
       <main className="flex-grow">
         {/* Hero Section */}
-        <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-28 overflow-hidden bg-slate-950">
+        <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-28 overflow-hidden">
           <div className="absolute inset-0 z-0">
             {(() => {
               const heroSrc = pageData.heroSrc;
@@ -145,7 +145,7 @@ const SuburbServicePage = () => {
                   <picture>
                     {heroSrc.webp && <source type="image/webp" srcSet={heroSrc.webp} sizes="(max-width: 768px) 100vw, 1200px" />}
                     {heroSrc.jpg && <source type="image/jpeg" srcSet={heroSrc.jpg} sizes="(max-width: 768px) 100vw, 1200px" />}
-                    <img src={heroSrc.defaultJpg || pageData.heroImage} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover opacity-40" />
+                    <img src={heroSrc.defaultJpg || pageData.heroImage} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover" />
                   </picture>
                 );
               }
@@ -154,11 +154,11 @@ const SuburbServicePage = () => {
               return (
                 <picture>
                   <source type="image/webp" srcSet={fallback.includes('?') ? `${fallback}&fm=webp&q=80` : `${fallback}?fm=webp&q=80`} />
-                  <img src={fallback} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover opacity-40" />
+                  <img src={fallback} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover" />
                 </picture>
               );
             })()}
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent"></div>
+            <div className="absolute inset-0 bg-slate-900/70"></div>
           </div>
 
           <div className="section-container relative z-10">

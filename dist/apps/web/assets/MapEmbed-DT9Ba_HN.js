@@ -1,1 +1,2 @@
 import{j as e}from"./ui-slot-DSGIHR9m.js";import"./react-router-dGOcFM6K.js";const r=({embedUrl:r,title:l="Location Map",height:o="400px"})=>e.jsx("div",{className:"map-container bg-muted shadow-lg border border-border/50",style:{height:"400px"!==o?o:void 0},children:e.jsx("iframe",{src:r,title:l,width:"100%",height:"100%",style:{border:0},allowFullScreen:!0,loading:"lazy",referrerPolicy:"no-referrer-when-downgrade",className:"w-full h-full"})});export{r as M};
+//# sourceMappingURL=MapEmbed-DT9Ba_HN.js.map

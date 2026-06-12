@@ -175,6 +175,10 @@ async function handleEditSave(updatedText) {
 			}),
 		});
 
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+
 		const result = await response.json();
 		if (result.success) {
 			const parentOrigin = getParentOrigin();
@@ -200,10 +204,13 @@ async function handleEditSave(updatedText) {
 			);
 		}
 	} catch (error) {
-		console.error(
-			`[vite][visual-editor] Error during fetch for ${editId}:`,
-			error
-		);
+		// Silently handle errors in production to avoid console errors
+		if (process.env.NODE_ENV === 'development') {
+			console.error(
+				`[vite][visual-editor] Error during fetch for ${editId}:`,
+				error
+			);
+		}
 	}
 }
 

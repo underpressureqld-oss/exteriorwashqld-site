@@ -12,8 +12,8 @@
 		<link rel="preconnect" href="https://horizons-cdn.hostinger.com" crossorigin />
 		
 		<!-- Preload Critical Resources -->
-		<link rel="preload" href="/logo.png" as="image" fetchpriority="high" />
-		<link rel="preload" href="https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80" as="image" imagesrcset="https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=600 600w, https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=768 768w, https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=1200 1200w, https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=1920 1920w" imagesizes="(max-width: 768px) 100vw, 1200px" />
+		<link rel="preload" href="/logo.webp" as="image" fetchpriority="high" />
+		<link rel="preload" href="/exterior-wash-hero-optimized.webp" as="image" fetchpriority="high" />
 
     <!-- Inline Critical CSS for Hero -->
     <style>
@@ -179,12 +179,12 @@
 			}
 		}
 		</script>
-		<script async type="module" crossorigin src="/assets/index-D2vIiChh.js"></script>
+		<script type="module" crossorigin src="/assets/index-BLEG2QDT.js"></script>
 		<link rel="modulepreload" crossorigin href="/assets/react-router-dGOcFM6K.js">
 		<link rel="modulepreload" crossorigin href="/assets/ui-slot-DSGIHR9m.js">
 		<link rel="modulepreload" crossorigin href="/assets/react-helmet-CT_dqSQX.js">
 		<link rel="modulepreload" crossorigin href="/assets/lucide-Bm-c67lh.js">
-		<link rel="stylesheet" crossorigin href="/assets/index-BN-Yx5N5.css">
+		<link rel="stylesheet" crossorigin href="/assets/index-CAxzs0x2.css">
 		<script type="module" defer>
 window.onerror = (message, source, lineno, colno, errorObj) => {
 	const errorDetails = errorObj ? JSON.stringify({
@@ -384,6 +384,6 @@ if (window.navigation && window.self !== window.top) {
 	</head>
 	<body>
 		<div id="root"></div>
-		<!-- Scripts naturally deferred by type="module" -->
+		<!-- Use defer to ensure DOM is parsed before React mounts -->
 	</body>
 </html>

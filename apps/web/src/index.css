@@ -7,14 +7,14 @@
     --background: 0 0% 100%;
     --foreground: 222 47% 11%;
 
-    --primary: 205 90% 45%;
+    --primary: 205 90% 35%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 210 40% 96%;
     --secondary-foreground: 222 47% 11%;
 
     --muted: 214 32% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted-foreground: 215 16% 30%;
 
     --accent: 38 92% 50%;
     --accent-foreground: 222 47% 11%;
@@ -27,7 +27,7 @@
 
     --border: 214 32% 91%;
     --input: 214 32% 91%;
-    --ring: 205 90% 45%;
+    --ring: 205 90% 35%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
