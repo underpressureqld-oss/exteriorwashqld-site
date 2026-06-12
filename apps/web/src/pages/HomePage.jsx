@@ -137,9 +137,7 @@ const HomePage = () => {
           aria-labelledby="hero-heading"
         >
           <img
-            src="https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80"
-            srcSet="https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=600 600w, https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=768 768w, https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=1200 1200w, https://horizons-cdn.hostinger.com/29891a98-b64e-4d1a-a351-176254719b39/ba7da534f8b455c6f65783b8ba20c7b7.jpg?auto=format&fit=crop&q=80&w=1920 1920w"
-            sizes="(max-width: 768px) 100vw, 1200px"
+            src="/exterior-wash-hero-optimized.webp"
             alt="Professional pressure cleaning service"
             fetchpriority="high"
             decoding="async"
