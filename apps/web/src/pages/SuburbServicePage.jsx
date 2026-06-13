@@ -42,7 +42,7 @@ const SuburbServicePage = () => {
       "url": currentUrl
     },
     "areaServed": suburb.name,
-    "description": pageData.metaDescription
+    "description": pageData?.metaDescription
   };
 
   // Select a couple related blogs based on service name matching loosely
@@ -55,7 +55,7 @@ const SuburbServicePage = () => {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": `Exterior Wash QLD - ${service.name} in ${suburb.name}`,
-    "image": pageData.heroImage,
+    "image": pageData?.heroImage,
     "telephone": "0468848342",
     "url": currentUrl,
     "priceRange": "$$",
@@ -89,28 +89,28 @@ const SuburbServicePage = () => {
   return (
     <div className="min-h-screen flex flex-col pb-16 md:pb-0">
       <Helmet>
-        <title>{pageData.title}</title>
-        <meta name="description" content={pageData.metaDescription} />
-        <meta name="keywords" content={pageData.localKeywords.join(', ')} />
+        <title>{pageData?.title}</title>
+        <meta name="description" content={pageData?.metaDescription} />
+        <meta name="keywords" content={(pageData?.localKeywords || []).join(', ')} />
         <link rel="canonical" href={currentUrl} />
         {/* Preload hero WebP when available for improved LCP */}
-        {pageData.heroSrc && pageData.heroSrc.defaultWebp && (
+        {pageData?.heroSrc && pageData.heroSrc.defaultWebp && (
           <link rel="preload" as="image" href={pageData.heroSrc.defaultWebp} />
         )}
         
         {/* Open Graph */}
-        <meta property="og:title" content={pageData.title} />
-        <meta property="og:description" content={pageData.metaDescription} />
-        <meta property="og:image" content={pageData.heroImage} />
+        <meta property="og:title" content={pageData?.title} />
+        <meta property="og:description" content={pageData?.metaDescription} />
+        <meta property="og:image" content={pageData?.heroImage} />
         <meta property="og:image:alt" content={`${service.name} in ${suburb.name}`} />
         <meta property="og:url" content={currentUrl} />
         <meta property="og:type" content="website" />
         
         {/* Twitter Card */}
         <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={pageData.title} />
-        <meta name="twitter:description" content={pageData.metaDescription} />
-        <meta name="twitter:image" content={pageData.heroImage} />
+        <meta name="twitter:title" content={pageData?.title} />
+        <meta name="twitter:description" content={pageData?.metaDescription} />
+        <meta name="twitter:image" content={pageData?.heroImage} />
         <meta name="twitter:image:alt" content={`${service.name} in ${suburb.name}`} />
 
         <script type="application/ld+json">{JSON.stringify(localBusinessSchema)}</script>
@@ -139,18 +139,18 @@ const SuburbServicePage = () => {
         <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-28 overflow-hidden">
           <div className="absolute inset-0 z-0">
             {(() => {
-              const heroSrc = pageData.heroSrc;
+              const heroSrc = pageData?.heroSrc;
               if (heroSrc && (heroSrc.webp || heroSrc.jpg)) {
                 return (
                   <picture>
                     {heroSrc.webp && <source type="image/webp" srcSet={heroSrc.webp} sizes="(max-width: 768px) 100vw, 1200px" />}
                     {heroSrc.jpg && <source type="image/jpeg" srcSet={heroSrc.jpg} sizes="(max-width: 768px) 100vw, 1200px" />}
-                    <img src={heroSrc.defaultJpg || pageData.heroImage} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover" />
+                    <img src={heroSrc.defaultJpg || pageData?.heroImage} alt={`${service.name} in ${suburb.name}`} fetchPriority="high" decoding="async" width="1920" height="800" className="w-full h-full object-cover" />
                   </picture>
                 );
               }
               // fallback to external hero if no local assets
-              const fallback = pageData.heroImage;
+              const fallback = pageData?.heroImage;
               return (
                 <picture>
                   <source type="image/webp" srcSet={fallback.includes('?') ? `${fallback}&fm=webp&q=80` : `${fallback}?fm=webp&q=80`} />
@@ -167,10 +167,10 @@ const SuburbServicePage = () => {
                 <MapPin className="w-4 h-4" /> Local to {suburb.name}, QLD
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight">
-                {pageData.heroTitle}
+                {pageData?.heroTitle}
               </h1>
               <p className="text-lg md:text-xl text-slate-300 mb-8 leading-relaxed max-w-2xl">
-                {pageData.heroSubtitle}
+                {pageData?.heroSubtitle}
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <QuoteButton className="btn-primary text-lg px-8 py-4" onClick={() => window.gtag && window.gtag('event', 'click_quote_suburb', { suburb: suburb.name })} />
@@ -188,7 +188,7 @@ const SuburbServicePage = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
                 <h2 className="text-3xl md:text-4xl font-bold mb-6 text-foreground text-balance">Why choose us for {service.name.toLowerCase()} in {suburb.name}?</h2>
-                <p className="text-lg text-muted-foreground mb-6 leading-relaxed">{pageData.introParagraph}</p>
+                <p className="text-lg text-muted-foreground mb-6 leading-relaxed">{pageData?.introParagraph}</p>
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">{service.description}</p>
                 <ul className="space-y-4 mb-8">
                   {(service.benefits || []).map((benefit, idx) => (
@@ -201,18 +201,18 @@ const SuburbServicePage = () => {
                   ))}
                 </ul>
                 {/* Render long-form localized content (SEO) */}
-                {pageData.longContent && (
+                {pageData?.longContent && (
                   <div className="prose max-w-none mt-6 text-muted-foreground" dangerouslySetInnerHTML={{ __html: pageData.longContent }} />
                 )}
               </motion.div>
 
               <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
-                {pageData.beforeImage && pageData.afterImage ? (
+                {pageData?.beforeImage && pageData?.afterImage ? (
                   <BeforeAfterSlider
                     beforeImage={pageData.beforeImage}
                     afterImage={pageData.afterImage}
-                    beforeSrc={pageData.beforeSrc}
-                    afterSrc={pageData.afterSrc}
+                    beforeSrc={pageData?.beforeSrc}
+                    afterSrc={pageData?.afterSrc}
                     altText={`${service.name} before and after in ${suburb.name}`}
                   />
                 ) : (
