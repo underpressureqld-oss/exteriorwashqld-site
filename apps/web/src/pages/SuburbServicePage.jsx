@@ -76,7 +76,7 @@ const SuburbServicePage = () => {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": pageData.faqs.map(faq => ({
+    "mainEntity": (pageData.faqs || []).map(faq => ({
       "@type": "Question",
       "name": faq.question,
       "acceptedAnswer": {
@@ -191,7 +191,7 @@ const SuburbServicePage = () => {
                 <p className="text-lg text-muted-foreground mb-6 leading-relaxed">{pageData.introParagraph}</p>
                 <p className="text-lg text-muted-foreground mb-8 leading-relaxed">{service.description}</p>
                 <ul className="space-y-4 mb-8">
-                  {service.benefits.map((benefit, idx) => (
+                  {(service.benefits || []).map((benefit, idx) => (
                     <li key={idx} className="flex items-start gap-3">
                       <div className="mt-1 bg-primary/10 p-1 rounded-full text-primary shrink-0">
                         <CheckCircle2 className="w-5 h-5" />
@@ -231,7 +231,7 @@ const SuburbServicePage = () => {
           <div className="section-container max-w-3xl">
             <h2 className="text-3xl font-bold mb-8 text-center text-balance">Frequently Asked Questions</h2>
             <div className="space-y-4">
-              {pageData.faqs.map((faq, idx) => (
+              {(pageData.faqs || []).map((faq, idx) => (
                 <details key={idx} className="group bg-card border border-border rounded-xl overflow-hidden [&_summary::-webkit-details-marker]:hidden">
                   <summary className="flex items-center justify-between p-6 cursor-pointer font-semibold text-foreground hover:bg-muted/50 transition-colors">
                     {faq.question}
@@ -257,7 +257,7 @@ const SuburbServicePage = () => {
                   Nearby Suburbs Serviced
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {nearbySuburbs.map(sub => (
+                  {(nearbySuburbs || []).map(sub => (
                     <Link key={sub.id} to={`/${serviceId}-${sub.id}`} className="p-3 rounded-xl border border-border bg-card hover:border-primary hover:text-primary transition-colors text-sm font-medium flex items-center gap-2 group">
                       <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" /> {sub.name}
                     </Link>
@@ -271,7 +271,7 @@ const SuburbServicePage = () => {
                   Related Articles
                 </h3>
                 <div className="space-y-4">
-                  {relatedBlogs.length > 0 ? relatedBlogs.map(blog => (
+                  {(relatedBlogs || []).length > 0 ? (relatedBlogs || []).map(blog => (
                     <Link key={blog.id} to={`/blog/${blog.slug}`} className="flex gap-4 group">
                       <img src={blog.featured_image} alt={blog.title} className="w-20 h-20 rounded-lg object-cover bg-muted" loading="lazy"/>
                       <div>
