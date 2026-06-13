@@ -10,7 +10,7 @@ const args = process.argv.slice(2);
 
 const child = spawn(pocketbasePath, args, {
   stdio: 'inherit',
-  shell: true,
+  shell: false,
   windowsHide: true
 });
 
